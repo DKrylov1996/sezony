@@ -1,0 +1,48 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-moss-800 text-leaf-200 antialiased;
+  background-image: radial-gradient(circle at top left, rgba(163, 237, 185, 0.18), transparent 55%),
+    radial-gradient(circle at 30% 70%, rgba(59, 92, 76, 0.7), transparent 60%);
+  min-height: 100vh;
+}
+
+.section-shell {
+  @apply relative overflow-hidden rounded-md border border-moss-600/60 bg-moss-800/90 shadow-[0_40px_120px_rgba(13,31,22,0.5)];
+}
+
+.glass-panel {
+  @apply rounded-md border border-moss-600/50 bg-moss-700/70 backdrop-blur;
+}
+
+.accent-dot {
+  @apply inline-flex h-2 w-2 rounded-full bg-mint-500;
+}
+
+.fade-up {
+  opacity: 0;
+  animation: fadeUp 0.8s ease-out forwards;
+}
+
+.fade-up-delay-1 {
+  animation-delay: 0.15s;
+}
+
+.fade-up-delay-2 {
+  animation-delay: 0.3s;
+}
+
+.fade-up-delay-3 {
+  animation-delay: 0.45s;
+}
+
