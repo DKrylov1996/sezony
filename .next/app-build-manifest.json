@@ -16,35 +16,30 @@
       "static/chunks/main-app.js",
       "static/chunks/app/projects/[slug]/page.js"
     ],
-    "/admin/page": [
+    "/admin/projects/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/admin/page.js"
+      "static/chunks/app/admin/projects/page.js"
     ],
     "/admin/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/admin/layout.js"
     ],
-    "/admin/projects/page": [
+    "/admin/projects/[id]/edit/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/admin/projects/page.js"
+      "static/chunks/app/admin/projects/[id]/edit/page.js"
+    ],
+    "/admin/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/admin/page.js"
     ],
     "/admin/requests/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/admin/requests/page.js"
-    ],
-    "/admin/projects/new/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/projects/new/page.js"
-    ],
-    "/admin/projects/[id]/edit/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/projects/[id]/edit/page.js"
     ]
   }
 }

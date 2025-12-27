@@ -137,15 +137,6 @@ export default async function HomePage() {
       <section className="section-shell mx-auto max-w-6xl p-8 md:p-14">
         <div className="flex flex-col gap-10 md:flex-row md:items-center md:justify-between">
           <div className="space-y-6">
-            <a
-              className="inline-flex items-center gap-3 rounded-full border border-moss-600/60 bg-moss-700/60 px-4 py-2 text-xs uppercase tracking-[0.3em] text-mint-400"
-              href="https://t.me/sezons_mgn"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <span className="accent-dot" />
-              Ссылка на наш телеграмм канал
-            </a>
             <h1 className="text-3xl font-medium text-mint-500 md:text-5xl">
               СЕЗОНЫ - студия ландшафтного дизайна и сад растений
             </h1>
@@ -170,11 +161,8 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="relative aspect-[4/5] w-full max-w-sm overflow-hidden rounded-md border border-moss-600/60 md:ml-auto">
-            <div className="absolute inset-0 bg-[url('https://imgproxy.gamma.app/resize/quality:80/resizing_type:fit/width:2000/height:2000/https://cdn.gamma.app/956rb2eqlon3708/26e33f8c6e4440c6be2fb1fa98fa0ca9/original/photo_2025-12-01_12-34-38.jpg')] bg-cover bg-center" />
+            <div className="absolute inset-0 bg-[url('/uploads/mainphoto.jpg')] bg-cover bg-center" />
             <div className="absolute inset-0 bg-gradient-to-t from-moss-900/80 via-transparent" />
-            <div className="absolute bottom-6 left-6 right-6 text-sm text-leaf-200/80">
-              Семейная мастерская полного цикла с собственным питомником растений.
-            </div>
           </div>
         </div>
       </section>
@@ -328,5 +316,3 @@ export default async function HomePage() {
     </main>
   );
 }
-
-

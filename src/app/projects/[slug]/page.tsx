@@ -2,6 +2,7 @@
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
+import LightboxGallery from '@/components/LightboxGallery';
 
 export const dynamic = 'force-dynamic';
 
@@ -80,19 +81,10 @@ export default async function ProjectPage({
 
       <section className="space-y-6">
         <h2 className="text-2xl text-mint-500">Галерея</h2>
-        <div className="grid gap-4 md:grid-cols-2">
-          {safeParseArray(project.galleryImages).map((src, index) => (
-            <div key={`${src}-${index}`} className="relative aspect-[4/3] w-full overflow-hidden rounded-md border border-moss-600/60">
-              <Image
-                src={src}
-                alt={`${project.title} фото ${index + 1}`}
-                fill
-                className="object-cover"
-                sizes="(min-width: 1024px) 45vw, 90vw"
-              />
-            </div>
-          ))}
-        </div>
+        <LightboxGallery
+          images={safeParseArray(project.galleryImages)}
+          title={project.title}
+        />
       </section>
     </main>
   );

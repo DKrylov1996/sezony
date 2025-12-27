@@ -1,6 +1,8 @@
 ﻿import type { Metadata } from 'next';
 import { Unbounded } from 'next/font/google';
 import './globals.css';
+import SiteHeader from '@/components/SiteHeader';
+import BackToTopButton from '@/components/BackToTopButton';
 
 const unbounded = Unbounded({
   subsets: ['latin', 'cyrillic'],
@@ -24,7 +26,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru">
-      <body className={`${unbounded.variable} font-sans`}>{children}</body>
+      <body className={`${unbounded.variable} font-sans`}>
+        <SiteHeader />
+        {children}
+        <BackToTopButton />
+      </body>
     </html>
   );
 }
