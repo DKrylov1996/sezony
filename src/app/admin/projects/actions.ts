@@ -93,6 +93,8 @@ export async function saveProjectAction(formData: FormData) {
     await prisma.project.create({
       data: {
         ...parsed,
+        slug: parsed.slug ?? createSlug(parsed.title),
+        coverImage: parsed.coverImage ?? '',
         sortOrder: nextSortOrder,
         tags: JSON.stringify(parsed.tags),
         galleryImages: JSON.stringify(parsed.galleryImages)

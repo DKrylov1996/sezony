@@ -20,13 +20,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Файл не найден' }, { status: 400 });
   }
 
-  const buffer = Buffer.from(await file.arrayBuffer());
+  const buffer = Buffer.from(await file.arrayBuffer()) as Buffer;
   const originalExtension = path.extname(file.name) || '.jpg';
   const isImage = file.type.startsWith('image/');
   const isVector = file.type === 'image/svg+xml';
   const isAnimated = file.type === 'image/gif';
 
-  let outputBuffer = buffer;
+  let outputBuffer: Buffer = buffer;
   let extension = originalExtension;
   let contentType = file.type || 'application/octet-stream';
 

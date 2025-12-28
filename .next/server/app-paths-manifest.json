@@ -1,11 +1,19 @@
 {
-  "/page": "app/page.js",
-  "/projects/[slug]/page": "app/projects/[slug]/page.js",
-  "/api/auth/logout/route": "app/api/auth/logout/route.js",
-  "/icon.svg/route": "app/icon.svg/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
   "/api/auth/login/route": "app/api/auth/login/route.js",
+  "/api/auth/logout/route": "app/api/auth/logout/route.js",
+  "/api/contact/route": "app/api/contact/route.js",
+  "/icon.svg/route": "app/icon.svg/route.js",
+  "/api/home-preview/route": "app/api/home-preview/route.js",
+  "/api/preview/route": "app/api/preview/route.js",
+  "/projects/[slug]/page": "app/projects/[slug]/page.js",
+  "/api/uploads/route": "app/api/uploads/route.js",
+  "/page": "app/page.js",
+  "/admin/home/page": "app/admin/home/page.js",
   "/admin/projects/page": "app/admin/projects/page.js",
   "/admin/admins/page": "app/admin/admins/page.js",
   "/admin/page": "app/admin/page.js",
-  "/admin/home/page": "app/admin/home/page.js"
+  "/admin/projects/new/page": "app/admin/projects/new/page.js",
+  "/admin/projects/[id]/edit/page": "app/admin/projects/[id]/edit/page.js",
+  "/admin/requests/page": "app/admin/requests/page.js"
 }

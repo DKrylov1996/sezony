@@ -16,9 +16,14 @@ type PreviewEntry = {
   expiresAt: number;
 };
 
+type HomePreviewEntry = {
+  data: HomeContent;
+  expiresAt: number;
+};
+
 const previewStore = new Map<string, PreviewEntry>();
 const DEFAULT_TTL_MS = 10 * 60 * 1000;
-const homePreviewStore = new Map<string, PreviewEntry>();
+const homePreviewStore = new Map<string, HomePreviewEntry>();
 
 function cleanupExpired(now: number) {
   for (const [key, entry] of previewStore.entries()) {

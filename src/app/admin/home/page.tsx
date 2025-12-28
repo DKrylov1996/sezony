@@ -4,6 +4,7 @@ import { saveHomeContentAction } from './actions';
 import ImageField from './ImageField';
 import HomePreviewButton from './HomePreviewButton';
 import SaveToast from './SaveToast';
+import { Suspense } from 'react';
 
 function joinParagraphs(items: string[]) {
   return items.join('\n\n');
@@ -21,7 +22,9 @@ export default async function AdminHomePage() {
 
   return (
     <>
-      <SaveToast />
+      <Suspense fallback={null}>
+        <SaveToast />
+      </Suspense>
       <div className="space-y-10">
         <div className="space-y-2">
           <h1 className="text-2xl text-mint-500">Главная страница</h1>
