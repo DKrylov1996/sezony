@@ -1,6 +1,7 @@
 ﻿import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { deleteProjectAction } from './actions';
+import DeleteProjectForm from './DeleteProjectForm';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,7 +37,12 @@ export default async function AdminProjectsPage() {
             {projects.map((project) => (
               <tr key={project.id} className="border-t border-moss-700/60">
                 <td className="px-4 py-3">
-                  <div className="font-medium text-leaf-200">{project.title}</div>
+                  <Link
+                    href={`/admin/projects/${project.id}/edit`}
+                    className="font-medium text-leaf-200 hover:underline"
+                  >
+                    {project.title}
+                  </Link>
                   <div className="text-xs text-leaf-200/60">/{project.slug}</div>
                 </td>
                 <td className="px-4 py-3">
@@ -58,15 +64,7 @@ export default async function AdminProjectsPage() {
                     >
                       Редактировать
                     </Link>
-                    <form action={deleteProjectAction}>
-                      <input type="hidden" name="id" value={project.id} />
-                      <button
-                        type="submit"
-                        className="rounded-full border border-red-400/60 px-3 py-1 text-xs uppercase tracking-[0.2em] text-red-200"
-                      >
-                        Удалить
-                      </button>
-                    </form>
+                    <DeleteProjectForm id={project.id} action={deleteProjectAction} />
                   </div>
                 </td>
               </tr>

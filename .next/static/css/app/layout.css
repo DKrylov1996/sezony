@@ -734,6 +734,12 @@ video {
 [hidden]:where(:not([hidden="until-found"])) {
   display: none;
 }
+.\!visible {
+  visibility: visible !important;
+}
+.visible {
+  visibility: visible;
+}
 .fixed {
   position: fixed;
 }
@@ -752,11 +758,29 @@ video {
 .right-6 {
   right: 1.5rem;
 }
+.right-24 {
+  right: 6rem;
+}
+.right-44 {
+  right: 11rem;
+}
+.left-6 {
+  left: 1.5rem;
+}
+.top-20 {
+  top: 5rem;
+}
+.right-64 {
+  right: 16rem;
+}
 .z-10 {
   z-index: 10;
 }
 .z-50 {
   z-index: 50;
+}
+.z-40 {
+  z-index: 40;
 }
 .mx-auto {
   margin-left: auto;
@@ -770,6 +794,15 @@ video {
 }
 .mt-auto {
   margin-top: auto;
+}
+.mb-16 {
+  margin-bottom: 4rem;
+}
+.mr-16 {
+  margin-right: 4rem;
+}
+.mt-5 {
+  margin-top: 1.25rem;
 }
 .block {
   display: block;
@@ -873,6 +906,12 @@ video {
 }
 .items-center {
   align-items: center;
+}
+.justify-start {
+  justify-content: flex-start;
+}
+.justify-end {
+  justify-content: flex-end;
 }
 .justify-center {
   justify-content: center;
@@ -1022,6 +1061,12 @@ video {
 }
 .bg-moss-900\/70 {
   background-color: rgb(20 40 28 / 0.7);
+}
+.bg-moss-800\/95 {
+  background-color: rgb(28 61 45 / 0.95);
+}
+.bg-red-500\/80 {
+  background-color: rgb(239 68 68 / 0.8);
 }
 .bg-gradient-to-t {
   background-image: linear-gradient(to top, var(--tw-gradient-stops));
@@ -1189,6 +1234,10 @@ video {
 .text-red-200 {
   --tw-text-opacity: 1;
   color: rgb(254 202 202 / var(--tw-text-opacity, 1));
+}
+.text-white {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 .underline-offset-4 {
   text-underline-offset: 4px;

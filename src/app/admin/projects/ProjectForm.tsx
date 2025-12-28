@@ -210,7 +210,6 @@ export default function ProjectForm({
       <div className="grid gap-4 md:grid-cols-2">
         <input
           name="shortDescription"
-          required
           defaultValue={project?.shortDescription}
           placeholder="Краткое описание"
           className="rounded-md border border-moss-600/60 bg-moss-800/80 px-4 py-3 text-sm"
@@ -225,7 +224,6 @@ export default function ProjectForm({
 
       <textarea
         name="fullDescription"
-        required
         defaultValue={project?.fullDescription}
         placeholder="Полное описание"
         rows={6}
@@ -270,7 +268,6 @@ export default function ProjectForm({
           <input
             type="file"
             accept="image/*"
-            required={!project?.id && !coverImage}
             onChange={(event) => uploadCover(event.target.files?.[0] || null)}
             className="w-full text-sm"
           />

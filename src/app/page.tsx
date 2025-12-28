@@ -1,109 +1,15 @@
-import Image from 'next/image';
+﻿import Image from 'next/image';
 import Link from 'next/link';
 import SectionHeading from '@/components/SectionHeading';
 import ProjectFilters from '@/components/ProjectFilters';
-import Faq, { type FaqItem } from '@/components/Faq';
+import Faq from '@/components/Faq';
 import ContactForm from '@/components/ContactForm';
 import { prisma } from '@/lib/prisma';
+import { resolveHomeContent } from '@/lib/homeContent';
+import { getHomePreviewData } from '@/lib/previewStore';
+import { getSession } from '@/lib/auth';
 
 export const revalidate = 120;
-
-const faqItems: FaqItem[] = [
-  {
-    question: 'Сколько времени занимает разработка проекта?',
-    answer:
-      'Сроки зависят от масштаба и сложности проекта. Проектирование обычно занимает от 30 рабочих дней.'
-  },
-  {
-    question: 'Какой минимальный бюджет необходим для ландшафтного дизайна?',
-    answer:
-      'Стоимость проекта формируется индивидуально после детального анализа участка и обсуждения ваших пожеланий. Минимальная стоимость - 40 000 рублей.'
-  },
-  {
-    question: 'Возможно ли удаленное проектирование?',
-    answer:
-      'Основная деятельность СЕЗОНЫ сосредоточена в Уральском регионе, где мы используем растения, адаптированные к местному климату. Однако мы готовы рассмотреть проекты в других регионах.'
-  },
-  {
-    question: 'Могу ли я посетить ваш питомник растений?',
-    answer: 'Мы работаем над этим и скоро откроем площадку для посещений.'
-  },
-  {
-    question: 'Возможна ли реализация проекта "под ключ"?',
-    answer:
-      'Да, мы осуществляем реализацию своих проектов с апреля по ноябрь. Также можно заказать растения с доставкой из проверенных питомников-партнеров.'
-  },
-  {
-    question: 'Когда возможен выезд специалиста на замер?',
-    answer: 'Осмотр и замер участка возможен до установления снежного покрова.'
-  },
-  {
-    question: 'Какой порядок оплаты?',
-    answer: 'Предоплата составляет 50% стоимости на момент заключения договора.'
-  },
-  {
-    question: 'Предоставляете ли вы услуги по уходу за садом после завершения проекта?',
-    answer:
-      'Да, мы предлагаем комплексные услуги по дальнейшему уходу за садом, чтобы он радовал вас долгие годы. Это включает сезонные работы, обрезку, подкормку и консультации.'
-  },
-  {
-    question: 'Возможно ли проектирование коммерческих объектов?',
-    answer:
-      'Да, мы проектируем как прилегающие территории коммерческой недвижимости, так и целые поселки.'
-  }
-];
-
-const principles = [
-  {
-    title: 'Простота',
-    description:
-      'Чистые линии, понятная композиция и гармоничные сочетания дают возможность остановиться, выдохнуть и почувствовать себя.'
-  },
-  {
-    title: 'Природные материалы',
-    description:
-      'Каменные глыбы, ступени из горного массива и локальные породы создают характер сада и живут веками.'
-  },
-  {
-    title: 'Понятный уход',
-    description:
-      'Мы создаем устойчивые композиции из растений, которые требуют минимального ухода, но дают максимальный эффект.'
-  },
-  {
-    title: 'Инженерные системы',
-    description:
-      'Каждый сад - это продуманная система полива, дренажа, освещения и коммуникаций с проработкой деталей.'
-  },
-  {
-    title: 'Индивидуальность',
-    description:
-      'Каждый проект рождается из ваших мечтаний, привычек и образа жизни. Мы создаем сад именно для вас.'
-  }
-];
-
-const projectComposition = [
-  'Общий план участка',
-  'План мощения',
-  'План освещения',
-  'План ливневой канализации',
-  'Посадочный план',
-  'План полива',
-  '3D-визуализация участка со всех ракурсов',
-  'Анимационный ролик «Прогулка по саду»'
-];
-
-const optionalComposition = [
-  'При разноуровневом участке - разрезы с указанием',
-  'Разрезы',
-  'Аксонометрические проекции',
-  'План заборов и ограждений'
-];
-
-const additionalComposition = [
-  'Решение по отделке фасадов',
-  'Новогоднее освещение',
-  'Планировка второстепенных построек'
-];
 
 function safeParseArray(value: string) {
   try {
@@ -114,11 +20,33 @@ function safeParseArray(value: string) {
   }
 }
 
-export default async function HomePage() {
+export default async function HomePage({
+  searchParams
+}: {
+  searchParams: { preview?: string; previewKey?: string };
+}) {
   const projects = await prisma.project.findMany({
     where: { isPublished: true },
     orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }]
   });
+
+  const entry = await prisma.homePageContent.findFirst({
+    orderBy: { updatedAt: 'desc' }
+  });
+  const isPreview = searchParams.preview === '1';
+  let content = resolveHomeContent(entry?.data);
+
+  if (isPreview && searchParams.previewKey) {
+    const session = await getSession();
+    if (!session) {
+      content = resolveHomeContent(entry?.data);
+    } else {
+      const previewContent = getHomePreviewData(searchParams.previewKey);
+      if (previewContent) {
+        content = previewContent;
+      }
+    }
+  }
 
   const projectCards = projects.map((project) => ({
     id: project.id,
@@ -139,32 +67,32 @@ export default async function HomePage() {
         <div className="flex flex-col gap-10 md:flex-row md:items-center md:justify-between">
           <div className="space-y-6">
             <h1 className="text-3xl font-medium text-mint-500 md:text-5xl">
-              СЕЗОНЫ - студия ландшафтного дизайна и сад растений
+              {content.hero.title}
             </h1>
             <p className="max-w-2xl text-base text-leaf-200/80 md:text-lg">
-              Мастерская полного цикла: создаем сады от первого эскиза до финального штриха
+              {content.hero.description}
             </p>
             <div className="flex flex-wrap gap-4">
               <a
-                href="http://t.me/KostiuchenkoPolina"
+                href={content.hero.primaryCtaUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="rounded-md bg-mint-500 px-6 py-3 text-sm font-medium text-black transition hover:bg-mint-400"
               >
-                Рассчитать стоимость
+                {content.hero.primaryCtaText}
               </a>
               <Link
-                href="#projects"
+                href={content.hero.secondaryCtaUrl}
                 className="rounded-md border border-mint-500 px-6 py-3 text-sm font-medium text-mint-500 transition hover:bg-mint-500 hover:text-black"
               >
-                Наши работы
+                {content.hero.secondaryCtaText}
               </Link>
             </div>
           </div>
           <div className="relative aspect-[4/5] w-full max-w-sm overflow-hidden rounded-md border border-moss-600/60 md:ml-auto">
             <Image
-              src="/uploads/mainphoto.jpg"
-              alt="Project photo"
+              src={content.hero.imageUrl}
+              alt={content.hero.imageAlt}
               fill
               priority
               className="object-cover"
@@ -177,25 +105,12 @@ export default async function HomePage() {
 
       <section className="mx-auto max-w-6xl space-y-10">
         <SectionHeading
-          eyebrow="Полный цикл создания сада"
-          title="СЕЗОНЫ - это семейная мастерская полного цикла"
-          subtitle="Мы сопровождаем каждый проект от первой идеи до момента, когда вы впервые ступите на дорожку своего обновлённого пространства."
+          eyebrow={content.intro.eyebrow}
+          title={content.intro.title}
+          subtitle={content.intro.subtitle}
         />
         <div className="grid gap-6 md:grid-cols-3">
-          {[
-            {
-              title: 'Проектирование',
-              text: 'Индивидуальный подход к каждому участку с учетом ваших желаний и особенностей ландшафта.'
-            },
-            {
-              title: 'Собственный питомник',
-              text: 'Растения, выращенные с заботой и адаптированные к уральскому климату.'
-            },
-            {
-              title: 'Реализация',
-              text: 'Воплощение проекта под ключ с контролем качества на всех этапах.'
-            }
-          ].map((item, index) => (
+          {content.intro.cards.map((item, index) => (
             <div
               key={item.title}
               className={`glass-panel p-6 ${index === 1 ? 'animate-drift' : ''}`}
@@ -206,35 +121,32 @@ export default async function HomePage() {
           ))}
         </div>
         <p className="max-w-4xl text-sm text-leaf-200/80 md:text-base">
-          С 2023 года мы воплотили более 30 проектов частных домов и дач, создали несколько общественных пространств, благоустроили парк и целый поселок. Наша особенность - собственный питомник растений, что позволяет нам контролировать качество на каждом этапе и предлагать решения, идеально адаптированные к местному климату.
+          {content.intro.note}
         </p>
       </section>
 
       <section className="mx-auto grid max-w-6xl gap-12 md:grid-cols-[1.2fr_0.8fr] md:items-center">
         <div className="space-y-6">
           <SectionHeading
-            eyebrow="Философия наших садов"
-            title="Мы создаем живую среду, которая дарит эмоциональный комфорт"
-            subtitle="В основе каждого проекта лежит глубокое понимание того, как человек чувствует себя в зелёном пространстве."
+            eyebrow={content.about.eyebrow}
+            title={content.about.title}
+            subtitle={content.about.subtitle}
           />
           <div className="space-y-4 text-sm text-leaf-200/80 md:text-base">
-            <h3 className="text-lg text-mint-400">Эмоциональная связь с природой</h3>
-            <p>
-              Сад - это пространство для созерцания, отдыха и восстановления сил. Мы тщательно продумываем каждый уголок так, чтобы вы могли найти гармонию с природой и услышать себя среди суеты будней.
-            </p>
-            <p>
-              Наша главная задача - подружить вас с вашим садом, сделать так, чтобы каждое утро начиналось с желания выйти на террасу с чашкой кофе, а вечер заканчивался прогулкой по любимым дорожкам.
-            </p>
+            <h3 className="text-lg text-mint-400">{content.about.heading}</h3>
+            {content.about.paragraphs.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
             <p className="rounded-md border border-moss-600/60 bg-moss-700/50 p-4 text-mint-400">
-              «Сад должен быть не обузой, а источником радости и вдохновения. Именно к этому мы стремимся в каждом проекте»
+              {content.about.highlight}
             </p>
           </div>
         </div>
         <div className="section-shell p-6">
           <div className="relative aspect-[3/4] w-full overflow-hidden rounded-md">
             <Image
-              src="/uploads/3.png"
-              alt="Project photo"
+              src={content.about.imageUrl}
+              alt={content.about.imageAlt}
               fill
               className="object-cover"
               sizes="(min-width: 768px) 28rem, 90vw"
@@ -245,12 +157,12 @@ export default async function HomePage() {
 
       <section className="mx-auto max-w-6xl space-y-10">
         <SectionHeading
-          eyebrow="Пять Принципов Проектирования СЕЗОНЫ"
-          title="Наш подход строится на пяти фундаментальных принципах"
-          subtitle="Эти ориентиры делают каждое пространство уникальным, комфортным и лёгким в уходе."
+          eyebrow={content.principles.eyebrow}
+          title={content.principles.title}
+          subtitle={content.principles.subtitle}
         />
         <div className="grid gap-6 md:grid-cols-2">
-          {principles.map((item, index) => (
+          {content.principles.items.map((item, index) => (
             <div key={item.title} className="glass-panel p-6">
               <div className="flex items-center gap-3">
                 <span className="text-sm text-mint-400">0{index + 1}</span>
@@ -264,68 +176,70 @@ export default async function HomePage() {
 
       <section className="mx-auto max-w-6xl space-y-10">
         <SectionHeading
-          eyebrow="Что вы получаете?"
-          title="Состав проекта"
-          subtitle="Полный комплект документации для реализации сада."
+          eyebrow={content.composition.eyebrow}
+          title={content.composition.title}
+          subtitle={content.composition.subtitle}
         />
-        <div className="text-xs uppercase tracking-[0.3em] text-mint-400">СОСТАВ ПРОЕКТА</div>
+        <div className="text-xs uppercase tracking-[0.3em] text-mint-400">
+          {content.composition.label}
+        </div>
         <div className="grid gap-6 md:grid-cols-3">
           <div className="glass-panel p-6">
-            <h3 className="text-lg text-mint-500">Полный комплект</h3>
+            <h3 className="text-lg text-mint-500">{content.composition.primaryTitle}</h3>
             <ul className="mt-4 space-y-2 text-sm text-leaf-200/80">
-              {projectComposition.map((item) => (
+              {content.composition.primaryItems.map((item) => (
                 <li key={item}>• {item}</li>
               ))}
             </ul>
           </div>
           <div className="glass-panel p-6">
-            <h3 className="text-lg text-mint-500">При необходимости</h3>
+            <h3 className="text-lg text-mint-500">{content.composition.optionalTitle}</h3>
             <ul className="mt-4 space-y-2 text-sm text-leaf-200/80">
-              {optionalComposition.map((item) => (
+              {content.composition.optionalItems.map((item) => (
                 <li key={item}>• {item}</li>
               ))}
             </ul>
           </div>
           <div className="glass-panel p-6">
-            <h3 className="text-lg text-mint-500">Дополнительно</h3>
+            <h3 className="text-lg text-mint-500">{content.composition.additionalTitle}</h3>
             <ul className="mt-4 space-y-2 text-sm text-leaf-200/80">
-              {additionalComposition.map((item) => (
+              {content.composition.additionalItems.map((item) => (
                 <li key={item}>• {item}</li>
               ))}
             </ul>
           </div>
         </div>
         <a
-          href="#contact"
+          href={content.composition.ctaUrl}
           className="inline-flex rounded-md border border-mint-500 px-6 py-3 text-sm font-medium text-mint-500 transition hover:bg-mint-500 hover:text-black"
         >
-          Заказать обратный звонок
+          {content.composition.ctaText}
         </a>
       </section>
 
       <section id="projects" className="mx-auto max-w-6xl space-y-10">
         <SectionHeading
-          eyebrow="Примеры работ"
-          title="Исследуйте портфолио СЕЗОНЫ"
-          subtitle="Каждый проект - это уникальное сочетание функциональности и красоты. Посмотрите, как мы воплощаем мечты в реальность."
+          eyebrow={content.projects.eyebrow}
+          title={content.projects.title}
+          subtitle={content.projects.subtitle}
         />
         <ProjectFilters projects={projectCards} tags={tags} />
       </section>
 
       <section className="mx-auto max-w-6xl space-y-10">
         <SectionHeading
-          eyebrow="Частые вопросы и ответы"
-          title="Ответы на самые распространенные вопросы"
-          subtitle="Если у вас есть другие вопросы, свяжитесь с нами."
+          eyebrow={content.faq.eyebrow}
+          title={content.faq.title}
+          subtitle={content.faq.subtitle}
         />
-        <Faq items={faqItems} />
+        <Faq items={content.faq.items} />
       </section>
 
       <section id="contact" className="mx-auto max-w-6xl space-y-10">
         <SectionHeading
-          eyebrow="Задать свой вопрос"
-          title="Расскажите о вашем участке"
-          subtitle="Мы поможем подобрать решения, которые подходят именно вам."
+          eyebrow={content.contact.eyebrow}
+          title={content.contact.title}
+          subtitle={content.contact.subtitle}
         />
         <ContactForm />
       </section>

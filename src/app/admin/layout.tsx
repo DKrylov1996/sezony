@@ -12,6 +12,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link href="/admin/projects" className="rounded-full border border-moss-600/70 px-4 py-2">
             Проекты
           </Link>
+          <Link href="/admin/home" className="rounded-full border border-moss-600/70 px-4 py-2">
+            Главная
+          </Link>
           <Link href="/admin/requests" className="rounded-full border border-moss-600/70 px-4 py-2">
             Заявки
           </Link>
