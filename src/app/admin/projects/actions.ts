@@ -44,18 +44,56 @@ export async function saveProjectAction(formData: FormData) {
   });
 
   if (id) {
-    await prisma.project.update({
-      where: { id },
-      data: {
-        ...parsed,
-        tags: JSON.stringify(parsed.tags),
-        galleryImages: JSON.stringify(parsed.galleryImages)
+    await prisma.$transaction(async (tx) => {
+      const existing = await tx.project.findUnique({
+        where: { id },
+        select: { sortOrder: true }
+      });
+
+      if (!existing) {
+        return;
       }
+
+      if (parsed.sortOrder !== existing.sortOrder) {
+        if (parsed.sortOrder > existing.sortOrder) {
+          await tx.project.updateMany({
+            where: {
+              id: { not: id },
+              sortOrder: { gt: existing.sortOrder, lte: parsed.sortOrder }
+            },
+            data: { sortOrder: { decrement: 1 } }
+          });
+        } else {
+          await tx.project.updateMany({
+            where: {
+              id: { not: id },
+              sortOrder: { gte: parsed.sortOrder, lt: existing.sortOrder }
+            },
+            data: { sortOrder: { increment: 1 } }
+          });
+        }
+      }
+
+      await tx.project.update({
+        where: { id },
+        data: {
+          ...parsed,
+          tags: JSON.stringify(parsed.tags),
+          galleryImages: JSON.stringify(parsed.galleryImages)
+        }
+      });
     });
   } else {
+    const lastProject = await prisma.project.findFirst({
+      orderBy: { sortOrder: 'desc' },
+      select: { sortOrder: true }
+    });
+    const nextSortOrder = (lastProject?.sortOrder ?? 0) + 1;
+
     await prisma.project.create({
       data: {
         ...parsed,
+        sortOrder: nextSortOrder,
         tags: JSON.stringify(parsed.tags),
         galleryImages: JSON.stringify(parsed.galleryImages)
       }

@@ -1,6 +1,7 @@
 ﻿'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
+import { createSlug } from '@/lib/slug';
 
 type ProjectFormData = {
   id?: string;
@@ -29,6 +30,9 @@ export default function ProjectForm({
     project?.galleryImages || []
   );
   const [uploading, setUploading] = useState(false);
+  const [slugValue, setSlugValue] = useState(project?.slug || '');
+  const [slugEdited, setSlugEdited] = useState(Boolean(project?.slug));
+  const formRef = useRef<HTMLFormElement>(null);
 
   const tagsValue = useMemo(() => (project?.tags || []).join(', '), [project]);
 
@@ -87,8 +91,96 @@ export default function ProjectForm({
     });
   }
 
+  function onTitleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    if (slugEdited) return;
+    setSlugValue(createSlug(event.target.value));
+  }
+
+  function onSlugChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const value = event.target.value;
+    setSlugValue(value);
+    setSlugEdited(value.trim().length > 0);
+  }
+
+  function openPreview() {
+    const formData = formRef.current ? new FormData(formRef.current) : null;
+    const title = formData?.get('title')?.toString() || '';
+    const slugInput = formData?.get('slug')?.toString() || '';
+    const shortDescription = formData?.get('shortDescription')?.toString() || '';
+    const fullDescription = formData?.get('fullDescription')?.toString() || '';
+    const location = formData?.get('location')?.toString() || '';
+    const year = formData?.get('year')?.toString() || '';
+    const tagsRaw = formData?.get('tags')?.toString() || '';
+    const tags = tagsRaw
+      .split(',')
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+    const payload = {
+      title,
+      slug: slugInput,
+      shortDescription,
+      fullDescription,
+      location: location || null,
+      year: year ? Number(year) : null,
+      tags,
+      coverImage,
+      galleryImages
+    };
+
+    const slugForPreview = slugInput || title || 'preview';
+    const url = new URL(`/projects/${slugForPreview}`, window.location.origin);
+    url.searchParams.set('preview', '1');
+
+    fetch('/api/preview', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(async (response) => {
+        if (response.ok) {
+          const data = (await response.json()) as { key?: string };
+          if (data.key) {
+            url.searchParams.set('previewKey', data.key);
+            window.open(url.toString(), '_blank', 'noopener,noreferrer');
+            return;
+          }
+        }
+
+        if (title) url.searchParams.set('title', title);
+        if (slugInput) url.searchParams.set('slug', slugInput);
+        if (shortDescription) url.searchParams.set('shortDescription', shortDescription);
+        if (fullDescription) url.searchParams.set('fullDescription', fullDescription);
+        if (location) url.searchParams.set('location', location);
+        if (year) url.searchParams.set('year', year);
+        if (tags.length) url.searchParams.set('tags', JSON.stringify(tags));
+        if (coverImage) {
+          url.searchParams.set('coverImage', coverImage);
+        }
+        if (galleryImages.length) {
+          url.searchParams.set('galleryImages', JSON.stringify(galleryImages));
+        }
+        window.open(url.toString(), '_blank', 'noopener,noreferrer');
+      })
+      .catch(() => {
+        if (title) url.searchParams.set('title', title);
+        if (slugInput) url.searchParams.set('slug', slugInput);
+        if (shortDescription) url.searchParams.set('shortDescription', shortDescription);
+        if (fullDescription) url.searchParams.set('fullDescription', fullDescription);
+        if (location) url.searchParams.set('location', location);
+        if (year) url.searchParams.set('year', year);
+        if (tags.length) url.searchParams.set('tags', JSON.stringify(tags));
+        if (coverImage) {
+          url.searchParams.set('coverImage', coverImage);
+        }
+        if (galleryImages.length) {
+          url.searchParams.set('galleryImages', JSON.stringify(galleryImages));
+        }
+        window.open(url.toString(), '_blank', 'noopener,noreferrer');
+      });
+  }
+
   return (
-    <form action={action} className="space-y-6">
+    <form ref={formRef} action={action} className="space-y-6">
       {project?.id ? <input type="hidden" name="id" value={project.id} /> : null}
       <input type="hidden" name="coverImage" value={coverImage} />
       <input
@@ -102,12 +194,14 @@ export default function ProjectForm({
           name="title"
           required
           defaultValue={project?.title}
+          onChange={onTitleChange}
           placeholder="Название проекта"
           className="rounded-md border border-moss-600/60 bg-moss-800/80 px-4 py-3 text-sm"
         />
         <input
           name="slug"
-          defaultValue={project?.slug}
+          value={slugValue}
+          onChange={onSlugChange}
           placeholder="Slug (если пусто - создается автоматически)"
           className="rounded-md border border-moss-600/60 bg-moss-800/80 px-4 py-3 text-sm"
         />
@@ -176,6 +270,7 @@ export default function ProjectForm({
           <input
             type="file"
             accept="image/*"
+            required={!project?.id && !coverImage}
             onChange={(event) => uploadCover(event.target.files?.[0] || null)}
             className="w-full text-sm"
           />
@@ -231,16 +326,13 @@ export default function ProjectForm({
         >
           {uploading ? 'Загрузка...' : 'Сохранить'}
         </button>
-        {project?.slug ? (
-          <a
-            href={`/projects/${project.slug}?preview=1`}
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-md border border-mint-500 px-6 py-3 text-sm font-medium text-mint-500"
-          >
-            Предпросмотр
-          </a>
-        ) : null}
+        <button
+          type="button"
+          onClick={openPreview}
+          className="rounded-md border border-mint-500 px-6 py-3 text-sm font-medium text-mint-500"
+        >
+          Предпросмотр
+        </button>
       </div>
     </form>
   );

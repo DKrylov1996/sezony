@@ -1,11 +1,7 @@
 {
-  "/page": "app/page.js",
   "/projects/[slug]/page": "app/projects/[slug]/page.js",
-  "/api/auth/logout/route": "app/api/auth/logout/route.js",
-  "/api/auth/login/route": "app/api/auth/login/route.js",
-  "/icon.svg/route": "app/icon.svg/route.js",
+  "/page": "app/page.js",
   "/admin/projects/page": "app/admin/projects/page.js",
-  "/admin/projects/[id]/edit/page": "app/admin/projects/[id]/edit/page.js",
-  "/admin/page": "app/admin/page.js",
-  "/admin/requests/page": "app/admin/requests/page.js"
+  "/admin/projects/new/page": "app/admin/projects/new/page.js",
+  "/admin/projects/[id]/edit/page": "app/admin/projects/[id]/edit/page.js"
 }

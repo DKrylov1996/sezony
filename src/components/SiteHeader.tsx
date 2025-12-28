@@ -9,7 +9,7 @@ export default function SiteHeader() {
             <img
               src="/uploads/logo.jpg"
               alt="СЕЗОНЫ"
-              className="h-16 w-16 rounded-md border border-moss-600/60 bg-moss-800/80 p-1 transition-transform duration-200 ease-out group-hover:scale-105"
+              className="h-16 w-16 shrink-0 rounded-md border border-moss-600/60 bg-moss-800/80 p-1 object-cover transition-transform duration-200 ease-out group-hover:scale-105"
             />
           </Link>
           <a

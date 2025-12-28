@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import SectionHeading from '@/components/SectionHeading';
 import ProjectFilters from '@/components/ProjectFilters';
@@ -5,7 +6,7 @@ import Faq, { type FaqItem } from '@/components/Faq';
 import ContactForm from '@/components/ContactForm';
 import { prisma } from '@/lib/prisma';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 120;
 
 const faqItems: FaqItem[] = [
   {
@@ -145,12 +146,12 @@ export default async function HomePage() {
             </p>
             <div className="flex flex-wrap gap-4">
               <a
-                href="https://t.me/sezons_mgn"
+                href="http://t.me/KostiuchenkoPolina"
                 target="_blank"
                 rel="noreferrer"
                 className="rounded-md bg-mint-500 px-6 py-3 text-sm font-medium text-black transition hover:bg-mint-400"
               >
-                Калькулятор проекта
+                Рассчитать стоимость
               </a>
               <Link
                 href="#projects"
@@ -161,7 +162,14 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="relative aspect-[4/5] w-full max-w-sm overflow-hidden rounded-md border border-moss-600/60 md:ml-auto">
-            <div className="absolute inset-0 bg-[url('/uploads/mainphoto.jpg')] bg-cover bg-center" />
+            <Image
+              src="/uploads/mainphoto.jpg"
+              alt="Project photo"
+              fill
+              priority
+              className="object-cover"
+              sizes="(min-width: 768px) 24rem, 90vw"
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-moss-900/80 via-transparent" />
           </div>
         </div>
@@ -223,7 +231,15 @@ export default async function HomePage() {
           </div>
         </div>
         <div className="section-shell p-6">
-          <div className="aspect-[3/4] w-full rounded-md bg-[url('https://imgproxy.gamma.app/resize/quality:80/resizing_type:fit/width:2000/https://cdn.gamma.app/956rb2eqlon3708/b5cf66405048477cbbe3ecdc88c397fe/original/photo_2025-04-13_11-33-22.jpg')] bg-cover bg-center" />
+          <div className="relative aspect-[3/4] w-full overflow-hidden rounded-md">
+            <Image
+              src="/uploads/3.png"
+              alt="Project photo"
+              fill
+              className="object-cover"
+              sizes="(min-width: 768px) 28rem, 90vw"
+            />
+          </div>
         </div>
       </section>
 

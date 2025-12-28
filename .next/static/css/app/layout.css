@@ -743,29 +743,17 @@ video {
 .relative {
   position: relative;
 }
-.sticky {
-  position: sticky;
-}
 .inset-0 {
   inset: 0px;
 }
 .bottom-6 {
   bottom: 1.5rem;
 }
-.left-6 {
-  left: 1.5rem;
-}
 .right-6 {
   right: 1.5rem;
 }
-.top-0 {
-  top: 0px;
-}
 .z-10 {
   z-index: 10;
-}
-.z-40 {
-  z-index: 40;
 }
 .z-50 {
   z-index: 50;
@@ -810,17 +798,11 @@ video {
 .aspect-\[4\/5\] {
   aspect-ratio: 4/5;
 }
-.h-8 {
-  height: 2rem;
+.h-16 {
+  height: 4rem;
 }
 .h-full {
   height: 100%;
-}
-.h-32 {
-  height: 8rem;
-}
-.h-16 {
-  height: 4rem;
 }
 .max-h-\[85vh\] {
   max-height: 85vh;
@@ -828,20 +810,14 @@ video {
 .min-h-screen {
   min-height: 100vh;
 }
-.w-8 {
-  width: 2rem;
+.w-16 {
+  width: 4rem;
 }
 .w-auto {
   width: auto;
 }
 .w-full {
   width: 100%;
-}
-.w-32 {
-  width: 8rem;
-}
-.w-16 {
-  width: 4rem;
 }
 .max-w-2xl {
   max-width: 42rem;
@@ -867,6 +843,9 @@ video {
 .flex-1 {
   flex: 1 1 0%;
 }
+.shrink-0 {
+  flex-shrink: 0;
+}
 @keyframes drift {
 
   0% {
@@ -882,6 +861,9 @@ video {
 }
 .cursor-zoom-out {
   cursor: zoom-out;
+}
+.resize {
+  resize: both;
 }
 .flex-col {
   flex-direction: column;
@@ -1031,6 +1013,9 @@ video {
 .bg-moss-800\/80 {
   background-color: rgb(28 61 45 / 0.8);
 }
+.bg-moss-800\/90 {
+  background-color: rgb(28 61 45 / 0.9);
+}
 .bg-moss-900 {
   --tw-bg-opacity: 1;
   background-color: rgb(20 40 28 / var(--tw-bg-opacity, 1));
@@ -1038,20 +1023,8 @@ video {
 .bg-moss-900\/70 {
   background-color: rgb(20 40 28 / 0.7);
 }
-.bg-moss-800\/90 {
-  background-color: rgb(28 61 45 / 0.9);
-}
-.bg-\[url\(\'https\:\/\/imgproxy\.gamma\.app\/resize\/quality\:80\/resizing_type\:fit\/width\:2000\/height\:2000\/https\:\/\/cdn\.gamma\.app\/956rb2eqlon3708\/26e33f8c6e4440c6be2fb1fa98fa0ca9\/original\/photo_2025-12-01_12-34-38\.jpg\'\)\] {
-  background-image: url('https://imgproxy.gamma.app/resize/quality:80/resizing_type:fit/width:2000/height:2000/https://cdn.gamma.app/956rb2eqlon3708/26e33f8c6e4440c6be2fb1fa98fa0ca9/original/photo_2025-12-01_12-34-38.jpg');
-}
-.bg-\[url\(\'https\:\/\/imgproxy\.gamma\.app\/resize\/quality\:80\/resizing_type\:fit\/width\:2000\/https\:\/\/cdn\.gamma\.app\/956rb2eqlon3708\/b5cf66405048477cbbe3ecdc88c397fe\/original\/photo_2025-04-13_11-33-22\.jpg\'\)\] {
-  background-image: url('https://imgproxy.gamma.app/resize/quality:80/resizing_type:fit/width:2000/https://cdn.gamma.app/956rb2eqlon3708/b5cf66405048477cbbe3ecdc88c397fe/original/photo_2025-04-13_11-33-22.jpg');
-}
 .bg-gradient-to-t {
   background-image: linear-gradient(to top, var(--tw-gradient-stops));
-}
-.bg-\[url\(\'\/uploads\/mainphoto\.jpg\'\)\] {
-  background-image: url('/uploads/mainphoto.jpg');
 }
 .from-moss-900\/80 {
   --tw-gradient-from: rgb(20 40 28 / 0.8) var(--tw-gradient-from-position);
@@ -1061,12 +1034,6 @@ video {
 .via-transparent {
   --tw-gradient-to: rgb(0 0 0 / 0)  var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), transparent var(--tw-gradient-via-position), var(--tw-gradient-to);
-}
-.bg-cover {
-  background-size: cover;
-}
-.bg-center {
-  background-position: center;
 }
 .object-contain {
   -o-object-fit: contain;
@@ -1248,14 +1215,14 @@ video {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
+.duration-200 {
+  transition-duration: 200ms;
+}
 .duration-300 {
   transition-duration: 300ms;
 }
 .duration-500 {
   transition-duration: 500ms;
-}
-.duration-200 {
-  transition-duration: 200ms;
 }
 .ease-out {
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);

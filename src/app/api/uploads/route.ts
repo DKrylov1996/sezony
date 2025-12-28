@@ -3,6 +3,7 @@ import path from 'path';
 import crypto from 'crypto';
 import { storeFile } from '@/lib/storage';
 import { getSession } from '@/lib/auth';
+import sharp from 'sharp';
 
 export const runtime = 'nodejs';
 
@@ -20,13 +21,31 @@ export async function POST(request: Request) {
   }
 
   const buffer = Buffer.from(await file.arrayBuffer());
-  const extension = path.extname(file.name) || '.jpg';
+  const originalExtension = path.extname(file.name) || '.jpg';
+  const isImage = file.type.startsWith('image/');
+  const isVector = file.type === 'image/svg+xml';
+  const isAnimated = file.type === 'image/gif';
+
+  let outputBuffer = buffer;
+  let extension = originalExtension;
+  let contentType = file.type || 'application/octet-stream';
+
+  if (isImage && !isVector && !isAnimated) {
+    outputBuffer = await sharp(buffer)
+      .rotate()
+      .resize({ width: 2000, height: 2000, fit: 'inside', withoutEnlargement: true })
+      .webp({ quality: 82 })
+      .toBuffer();
+    extension = '.webp';
+    contentType = 'image/webp';
+  }
+
   const filename = `${crypto.randomUUID()}${extension}`;
 
   const url = await storeFile({
-    buffer,
+    buffer: outputBuffer,
     filename,
-    contentType: file.type || 'application/octet-stream'
+    contentType
   });
 
   return NextResponse.json({ url });
