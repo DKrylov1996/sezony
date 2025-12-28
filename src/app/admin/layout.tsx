@@ -18,6 +18,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link href="/admin/requests" className="rounded-full border border-moss-600/70 px-4 py-2">
             Заявки
           </Link>
+          <Link href="/admin/admins" className="rounded-full border border-moss-600/70 px-4 py-2">
+            Админы
+          </Link>
           <form action="/api/auth/logout" method="post">
             <button type="submit" className="rounded-full border border-mint-500 px-4 py-2 text-mint-400">
               Выйти
